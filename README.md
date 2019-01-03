@@ -15,7 +15,7 @@ Requires python3 for now.
 It is very basic for now.
 
 - ~~OP_RETURN output for electron-cash op_return markdown~~
-- OP_RETURN hex-like output
+- ~~OP_RETURN hex-like output~~
 - additional payment types
 - generate raw hex output that common node CLIs can use
 
