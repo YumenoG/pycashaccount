@@ -2,6 +2,9 @@
 __pycache__
 .coverage
 .pytest_cache
+build
+dist
+*.egg-info
 
 # files
 *.pyc
