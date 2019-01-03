@@ -33,16 +33,29 @@ class TestConverters(unittest.TestCase):
         assert rgstr.from_hexlike('656d657267656e745f726561736f6e73') == 'emergent_reasons'
 
 
-class TestElectronMarkdown(unittest.TestCase):
-    def test_key_hash(self):
+class TestTxOutputs(unittest.TestCase):
+    def setUp(self):
+        name = 'emergent_reasons'
+        keyhash_info = pay.PaymentKeyHash('bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9')
+        self.keyhash_registration = rgstr.Registration(name, keyhash_info)
+
+    def test_electron_markdown_with_key_hash(self):
         expected = '<push><hex>01010101' \
                    '<push><hex>656d657267656e745f726561736f6e73' \
                    '<push><hex>01f793fe8539aa546e579954d43af6a76229f28e4e'
 
-        name = 'emergent_reasons'
-        payment_info = pay.PaymentKeyHash('bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9')
-        registration = rgstr.Registration(name, payment_info)
-        self.assertEqual(rgstr.electron_markdown(registration), expected)
+        self.assertEqual(rgstr.electron_markdown(self.keyhash_registration), expected)
+
+    def test_opreturn_hex_with_key_hash(self):
+        expected = ''.join([
+            '04',                                           # OP_RETURN
+            '01010101',                                     # cash account protocol
+            '10',                                           # push x bytes of name
+            '656d657267656e745f726561736f6e73',             # name
+            '15',                                           # push 0x15 (21) bytes of payment info
+            '01f793fe8539aa546e579954d43af6a76229f28e4e'    # 01 payment type + info
+        ])
+        self.assertEqual(rgstr.opreturn_hexlike(self.keyhash_registration), expected)
 
 
 class TestString(unittest.TestCase):

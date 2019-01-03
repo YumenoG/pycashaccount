@@ -25,13 +25,13 @@ It is very basic for now.
 For example, get the information required for a key hash account (it uses a simple address):
 
 ```bash
-cashaccount address emergent_reasons bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9
+cashaccount address emergent_reasons bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9 --opreturn-hex
 ```
 
 Generally:
 
 ```bash
-cashaccount payment_type name payment_info
+cashaccount payment_type name payment_info --formatting
 ```
 
 Get help:
@@ -59,13 +59,13 @@ Look at `cashaccount/cli.py` for usage.
 For example, create a registration from a name and payment information.
 
 ```python
-from cashaccount import PaymentKeyHash, Registration, electron_markdown
+from cashaccount import PaymentKeyHash, Registration, opreturn_hexlike
 
 name = 'emergent_reasons'
 info = PaymentKeyHash('bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9')
 registration = Registration(name, info)
 print(registration)
-print(electron_markdown(registration))
+print(opreturn_hexlike(registration))
 ```
 
 
