@@ -8,7 +8,7 @@ with open('README.md') as f:
 
 setup(
     name='pycashaccount',
-    version='0.1.1',
+    version='0.1.2',
     author='emergent-reasons',
     author_email='emergentreasons@gmail.com',
     description='helper for creating cash accounts',

@@ -59,13 +59,17 @@ def from_hexlike(hexlike_string):
 
 def _minpush_for(hexlike):
     bytelen = len(hexlike) // 2
-    assert len(hexlike) % 2 == 0
-    if bytelen < 76:
+    if len(hexlike) % 2 != 0:
+        raise ValueError('got an odd number of hex digits ({}). require 1-byte hex pairs'.format(bytelen+1))
+    if bytelen == 0:
+        raise ValueError('expected at least one byte of data but got zero')
+    elif bytelen < 76:
         return '{:02x}'.format(bytelen)
     elif bytelen < 2**8:
         return OP_PUSHDATA1 + '{:02x}'.format(bytelen)
-    elif bytelen < 2**16:
-        return OP_PUSHDATA2 + '{:04x}'.format(bytelen)
-    elif bytelen < 2**32:
-        return OP_PUSHDATA4 + '{:08x}'.format(bytelen)
-    raise ValueError('provided value is too many bytes to push ({}, max {})'.format(bytelen, 2**32))
+    # nah...
+    # elif bytelen < 2**16:
+    #     return OP_PUSHDATA2 + '{:04x}'.format(bytelen)
+    # elif bytelen < 2**32:
+    #     return OP_PUSHDATA4 + '{:08x}'.format(bytelen)
+    raise ValueError('only data up to 255 bytes are supported but got {} bytes'.format(bytelen))

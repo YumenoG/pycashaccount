@@ -33,6 +33,24 @@ class TestConverters(unittest.TestCase):
         assert rgstr.from_hexlike('656d657267656e745f726561736f6e73') == 'emergent_reasons'
 
 
+class TestOpPush(unittest.TestCase):
+    def test_minpush_works_for_short_data(self):
+        self.assertEqual(rgstr._minpush_for('00' * 1), '01')  # minimum push
+        self.assertEqual(rgstr._minpush_for('00' * 9), '09')
+        self.assertEqual(rgstr._minpush_for('00' * 30), '1e')
+        self.assertEqual(rgstr._minpush_for('00' * 75), '4b')  # max specific push code
+
+    def test_minpush_works_for_var_data(self):
+        self.assertEqual(rgstr._minpush_for('00' * 76), '764c')  # min push 1 byte
+        self.assertEqual(rgstr._minpush_for('00' * (2**8-1)), '76ff')  # max push 1 byte
+
+    def test_minpush_raises_exception_for_invalid_lengths(self):
+        with self.assertRaises(Exception):
+            rgstr._minpush_for('')
+        with self.assertRaises(Exception):
+            rgstr._minpush_for('00' * 2**8)
+
+
 class TestTxOutputs(unittest.TestCase):
     def setUp(self):
         name = 'emergent_reasons'
