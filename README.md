@@ -12,7 +12,9 @@ Requires python3 for now.
 
 ## Status / ToDo
 
-It is very basic for now.
+### Warning: For now, it only works for simple p2pkh addresses. Do not use with p2sh.
+
+It is very basic still.
 
 - ~~OP_RETURN output for electron-cash op_return markdown~~
 - ~~OP_RETURN hex-like output~~
