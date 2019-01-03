@@ -7,7 +7,7 @@ A helper library + cli to help you create a [cash account](https://gitlab.com/ca
 
 Requires python3 for now.
 
-`pip install cashaccount`
+`pip install pycashaccount`
 
 
 ## Status / ToDo
