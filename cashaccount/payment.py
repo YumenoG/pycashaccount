@@ -36,7 +36,7 @@ def _loose_address(address_string):
 
 
 def _looks_like_cashaddr_without_prefix(s):
-    if s[0] != 'q':
+    if s[0] not in ['p', 'q']:
         return False
     if len(s) != 42:
         return False
