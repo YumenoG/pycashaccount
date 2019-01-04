@@ -17,7 +17,7 @@ class Info:
 
 class PaymentKeyHash(Info):
     TYPE = 1
-    NAME = 'Key Hash'
+    NAME = 'Key Hash (P2PKH)'
 
     def __init__(self, address_string):
         address_string = _loose_address(address_string)
@@ -27,6 +27,11 @@ class PaymentKeyHash(Info):
             raise ValueError('unable to interpret address as cashaddress or legacy ({})'
                              ''.format(address_string))
         self.data = _hash160(address)
+
+
+class PaymentScriptHash(PaymentKeyHash):
+    TYPE = 2
+    NAME = 'Script Hash (P2SH)'
 
 
 def _loose_address(address_string):
