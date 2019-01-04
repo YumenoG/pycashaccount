@@ -23,10 +23,11 @@ It is very basic still.
 
 ## CLI (command line interface) usage after installation
 
-For example, get the information required for a key hash account (it uses a simple address):
+For example, get the information required for a key hash and script hash accounts:
 
 ```bash
-cashaccount address emergent_reasons bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9 --opreturn-hex
+cashaccount keyhash emergent_reasons bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9 --opreturn-hex
+cashaccount scripthash some_name bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9 --opreturn-hex
 ```
 
 Generally:

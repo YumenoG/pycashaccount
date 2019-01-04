@@ -17,10 +17,10 @@ class TestKeyHashInfo(unittest.TestCase):
     def test_works_for_legacy(self):
         self.assertEqual(pay.PaymentKeyHash(self.LEGACY).hexlike(), self.INFO)
 
-    def test_raises_some_exception_for_invalid_addresses(self):
-        with self.assertRaises(Exception):
+    def test_raises_ValueError_for_invalid_addresses(self):
+        with self.assertRaises(ValueError):
             pay.PaymentKeyHash('invalid address')
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             pay.PaymentKeyHash('qstillinvalid')
 
     def test_string_has_useful_info(self):
