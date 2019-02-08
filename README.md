@@ -1,6 +1,9 @@
 # Cash Account Helper
 
-A helper library + cli to help you create a [cash account](https://gitlab.com/cash-accounts/specification).
+You can already take payment information like an address and register a [cash account](https://gitlab.com/cash-accounts/specification) at [cashaccount.info](https://cashaccount.info).
+I really recommend you do.
+
+This CLI and library will help you prepare cash account registrations that you can broadcast yourself.
 
 
 ## Installation
@@ -12,7 +15,7 @@ Requires python3 for now.
 
 ## Status / ToDo
 
-It is very basic still.
+It is very basic still. Please file an issue if you have additional use cases for it.
 
 - ~~OP_RETURN output for electron-cash op_return markdown~~
 - ~~OP_RETURN hex-like output~~
@@ -26,8 +29,11 @@ It is very basic still.
 For example, get the information required for a key hash and script hash accounts:
 
 ```bash
-cashaccount keyhash emergent_reasons bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9 --opreturn-hex
-cashaccount scripthash some_name bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9 --opreturn-hex
+p2pkh="bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9"
+p2sh="bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9"
+
+cashaccount keyhash name1 "$p2pkh"
+cashaccount scripthash name2 "$p2sh" --opreturn-hex
 ```
 
 Generally:
@@ -41,7 +47,7 @@ Get help:
 ```bash
 cashaccount --help
 
-cashaccount address --help
+cashaccount keyhash --help
 ```
 
 
@@ -61,21 +67,27 @@ Look at `cashaccount/cli.py` for usage.
 For example, create a registration from a name and payment information.
 
 ```python
-from cashaccount import PaymentKeyHash, Registration, opreturn_hexlike
+from cashaccount import KeyHashInfo, Registration, opreturn
 
 name = 'emergent_reasons'
-info = PaymentKeyHash('bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9')
+info = KeyHashInfo('bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9')
 registration = Registration(name, info)
 print(registration)
-print(opreturn_hexlike(registration))
+print(opreturn(registration))
 ```
 
 
 ## Contributions
 
-Contributions are welcome:
+Code contributions are welcome:
 
 - Fork the repository and submit a pull request from your fork.
 - Install test requirements `pip install -r requirements-test.txt`
 - Update tests to cover any changes
-- Confirm all tests pass before submitting a Pull Request (e.g. `pytest --cov -v`)
+- Confirm all tests pass before submitting a Pull Request (e.g. `pytest --cov-report term-missing --cov=cashaccount test/`)
+
+Support donations are also welcome:
+
+- `🌵emergent_reasons#100` (my first cash account - it points to `bitcoincash:qz3aq0uhltztqyjy2esa0lshadg9pf87yu7yealu3a`
+- `☯Jonathan#100` (the primary creator of the cash account specification - it points to `bitcoincash:qr4aadjrpu73d2wxwkxkcrt6gqxgu6a7usxfm96fst`)
+- [Electron Cash](https://electroncash.org/) If you are using electron cash special OP_RETURN features to post transactions, the team has donation information on the site.

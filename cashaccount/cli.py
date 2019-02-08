@@ -1,8 +1,8 @@
 import click
 
-from . import electron_markdown as em
-from . import opreturn_hexlike
-from . import PaymentKeyHash, PaymentScriptHash
+from . import electron_markdown as ecmd
+from . import opreturn as ophex
+from . import KeyHashInfo, ScriptHashInfo
 from . import Registration
 
 
@@ -18,10 +18,12 @@ def run():
 @click.option('--electron-markdown', is_flag=True, default=False)
 def keyhash(name, cash_or_legacy_address, electron_markdown, opreturn_hex):
     try:
-        info = PaymentKeyHash(cash_or_legacy_address)
+        info = KeyHashInfo(cash_or_legacy_address)
     except ValueError as e:
         raise click.exceptions.BadParameter(e)
-    _handle_address(name, info, electron_markdown, opreturn_hex)
+    r = Registration(name, info)
+    s = _format(r, electron_markdown, opreturn_hex)
+    click.echo(s)
 
 
 @run.command()
@@ -31,18 +33,17 @@ def keyhash(name, cash_or_legacy_address, electron_markdown, opreturn_hex):
 @click.option('--electron-markdown', is_flag=True, default=False)
 def scripthash(name, cash_or_legacy_address, electron_markdown, opreturn_hex):
     try:
-        info = PaymentScriptHash(cash_or_legacy_address)
+        info = ScriptHashInfo(cash_or_legacy_address)
     except ValueError as e:
         raise click.exceptions.BadParameter(e)
-    _handle_address(name, info, electron_markdown, opreturn_hex)
+    r = Registration(name, info)
+    s = _format(r, electron_markdown, opreturn_hex)
+    click.echo(s)
 
 
-def _handle_address(name, info, electron_markdown, opreturn_hex):
-    registration = Registration(name, info)
+def _format(registration, electron_markdown, opreturn_hex):
     if electron_markdown:
-        result = em(registration)
+        return ecmd(registration)
     elif opreturn_hex:
-        result = opreturn_hexlike(registration)
-    else:
-        result = str(registration)
-    click.echo(result)
+        return ophex(registration)
+    return str(registration)
