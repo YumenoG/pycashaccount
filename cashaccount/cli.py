@@ -6,6 +6,14 @@ from . import KeyHashInfo, ScriptHashInfo
 from . import Registration
 
 
+FMT_OPRETURN = 'opreturn'
+FMT_EC_MARKDOWN = 'electron-markdown'
+FMTS = [
+    FMT_OPRETURN,
+    FMT_EC_MARKDOWN,
+]
+
+
 @click.group()
 def run():
     pass
@@ -14,36 +22,45 @@ def run():
 @run.command()
 @click.argument('name')
 @click.argument('cash_or_legacy_address')
-@click.option('--opreturn-hex', is_flag=True, default=False)
-@click.option('--electron-markdown', is_flag=True, default=False)
-def keyhash(name, cash_or_legacy_address, electron_markdown, opreturn_hex):
+@click.option('-f', '--format', 'fmt', type=click.Choice(FMTS))
+def keyhash(name, cash_or_legacy_address, fmt):
     try:
         info = KeyHashInfo(cash_or_legacy_address)
     except ValueError as e:
-        raise click.exceptions.BadParameter(e)
-    r = Registration(name, info)
-    s = _format(r, electron_markdown, opreturn_hex)
+        raise click.exceptions.BadParameter('Unable to create payment info: {}'.format(e))
+
+    try:
+        r = Registration(name, info)
+    except ValueError as e:
+        raise click.exceptions.BadParameter('Unable to create registration: {}'.format(e))
+
+    s = _format(r, fmt)
     click.echo(s)
 
 
 @run.command()
 @click.argument('name')
 @click.argument('cash_or_legacy_address', type=click.types.STRING)
-@click.option('--opreturn-hex', is_flag=True, default=False)
-@click.option('--electron-markdown', is_flag=True, default=False)
-def scripthash(name, cash_or_legacy_address, electron_markdown, opreturn_hex):
+@click.option('-f', '--format', 'fmt', type=click.Choice(FMTS))
+def scripthash(name, cash_or_legacy_address, fmt):
     try:
         info = ScriptHashInfo(cash_or_legacy_address)
     except ValueError as e:
-        raise click.exceptions.BadParameter(e)
-    r = Registration(name, info)
-    s = _format(r, electron_markdown, opreturn_hex)
+        raise click.exceptions.BadParameter('Unable to create payment info: {}'.format(e))
+
+    try:
+        r = Registration(name, info)
+    except ValueError as e:
+        raise click.exceptions.BadParameter('Unable to create registration: {}'.format(e))
+
+    s = _format(r, fmt)
     click.echo(s)
 
 
-def _format(registration, electron_markdown, opreturn_hex):
-    if electron_markdown:
-        return ecmd(registration)
-    elif opreturn_hex:
-        return ophex(registration)
-    return str(registration)
+def _format(registration, fmt):
+    formatter = {
+        FMT_OPRETURN:    ophex,
+        FMT_EC_MARKDOWN: ecmd,
+        None:            str,
+    }[fmt]
+    return formatter(registration)

@@ -33,13 +33,13 @@ p2pkh="bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9"
 p2sh="bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9"
 
 cashaccount keyhash name1 "$p2pkh"
-cashaccount scripthash name2 "$p2sh" --opreturn-hex
+cashaccount scripthash name2 "$p2sh" --format=opreturn
 ```
 
 Generally:
 
 ```bash
-cashaccount payment_type name payment_info --formatting
+cashaccount payment_type name payment_info [--format]
 ```
 
 Get help:
