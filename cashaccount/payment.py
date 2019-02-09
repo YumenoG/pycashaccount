@@ -58,6 +58,70 @@ class ScriptHashInfo(KeyHashInfo):
             raise ValueError('expected a P2SH address but got {}'.format(v))
 
 
+class PaymentCodeInfo(_Info):
+    TYPE_BYTE = 0x03
+    NAME = 'Payment Code (Bip47) Info'
+
+    def __init__(self, payment_code):
+        self._validate_paymentcode(payment_code)
+        self._payment_code = payment_code
+        # take all payment code data bytes except for the version byte
+        self._paymentcode_payload = base58.b58decode_check(self._payment_code)[1:].hex()
+
+    def base(self):
+        return self._payment_code
+
+    def _data_hex(self):
+        return self._paymentcode_payload
+
+    @classmethod
+    def from_xpub(cls, xpub):
+        cls._validate_xpub(xpub)
+        xpub_decoded_bytes = base58.b58decode_check(xpub)
+        pubkey_bytes = xpub_decoded_bytes[45:78]
+        chaincode_bytes = xpub_decoded_bytes[13:45]
+        payment_code_data = bytes([
+            # 47 lets anyone looking at this data know that this is for bip47
+            # but it is not used until base58 encoding and not part of the fixed payment code data
+            0x47,
+            # 1 is the payment code version. There is also version 2 with different data
+            0x01,
+            # 0 shows that we are not using "bitmessage" for notifications.
+            0x00,
+            # next we unpack the 33-byte compressed public key with a "*".
+            *pubkey_bytes,
+            # then we unpack the 32-byte chain code
+            *chaincode_bytes,
+            # then we dump 13 bytes of zero in the space reserved for future features
+            *[0x00] * 13
+        ])
+        payment_code = base58.b58encode_check(payment_code_data).decode('utf-8')
+        return cls(payment_code)
+
+    @staticmethod
+    def _validate_paymentcode(pc_string):
+        try:
+            payload = base58.b58decode_check(pc_string)
+        except ValueError as e:
+            raise ValueError('unable to interpret payment code: {}'.format(e))
+
+        version_byte = payload[0]
+        if version_byte != 0x47:
+            raise ValueError('expected payment code payload to start with 0x47 but got {:02x}'
+                             ''.format(version_byte))
+
+    @staticmethod
+    def _validate_xpub(xpub_string):
+        prefix = xpub_string[:4]
+        if prefix not in ['xpub', 'tpub']:
+            raise ValueError('expected xpub to start with "xpub" or "tpub" but found {}'.format(prefix))
+
+        try:
+            base58.b58decode_check(xpub_string)
+        except ValueError as e:
+            raise ValueError('unable to interpret xpub: {}'.format(e))
+
+
 def _normalize(address_string):
     """Convert legacy or cashaddr string to an address object.
 

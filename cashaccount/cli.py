@@ -2,7 +2,7 @@ import click
 
 from . import electron_markdown as ecmd
 from . import opreturn as ophex
-from . import KeyHashInfo, ScriptHashInfo
+from . import KeyHashInfo, ScriptHashInfo, PaymentCodeInfo
 from . import Registration
 
 
@@ -45,6 +45,38 @@ def keyhash(name, cash_or_legacy_address, fmt):
 def scripthash(name, cash_or_legacy_address, fmt):
     try:
         info = ScriptHashInfo(cash_or_legacy_address)
+    except ValueError as e:
+        raise click.exceptions.BadParameter('Unable to create payment info: {}'.format(e))
+
+    try:
+        r = Registration(name, info)
+    except ValueError as e:
+        raise click.exceptions.BadParameter('Unable to create registration: {}'.format(e))
+
+    s = _format(r, fmt)
+    click.echo(s)
+
+
+SRC_PAYMENT_CODE = 'from-code'
+SRC_XPUB = 'from-xpub'
+SRCS = [
+    SRC_PAYMENT_CODE,
+    SRC_XPUB,
+]
+
+
+@run.command()
+@click.argument('name')
+@click.argument('source-type', type=click.Choice(SRCS))
+@click.argument('source', type=click.types.STRING)
+@click.option('-f', '--format', 'fmt', type=click.Choice(FMTS))
+def paymentcode(name, source_type, source, fmt):
+    maker = {
+        SRC_PAYMENT_CODE: PaymentCodeInfo,
+        SRC_XPUB: PaymentCodeInfo.from_xpub,
+    }[source_type]
+    try:
+        info = maker(source)
     except ValueError as e:
         raise click.exceptions.BadParameter('Unable to create payment info: {}'.format(e))
 

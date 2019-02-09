@@ -20,9 +20,20 @@ It is very basic still. Please file an issue if you have additional use cases fo
 - ~~OP_RETURN output for electron-cash op_return markdown~~
 - ~~OP_RETURN hex-like output~~
 - ~~p2sh output~~
-- support payment codes
+- ~~support payment codes~~
 - ~~generate raw hex output that common node CLIs can use~~
+- support stealth addresses
+- support lookup of cash accounts
 
+
+## Note about Bip47 payment codes
+
+[Bip47](https://github.com/bitcoin/bips/blob/master/bip-0047.mediawiki) payment codes are very interesting.
+Please read [this introduction](https://honest.cash/emergent_reasons/what-is-a-payment-code-bip47-and-how-can-i-make-one-with-electron-cash-1919)
+to them before using `pycashaccount` to register a payment code.
+The payment code itself is non-trivial to generate so `pycashaccount` lets you create registration info
+from the xpub as well as the payment code itself. Please be very careful with xpubs.
+Please make absolutely sure you do not export and start copy-pasting an ***xpriv***.
 
 ## CLI (command line interface) usage after installation
 
@@ -31,9 +42,13 @@ For example, get the information required for a key hash and script hash account
 ```bash
 p2pkh="bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9"
 p2sh="bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9"
+paymentcode="PM8TJTLJbPRGxSbc8EJi42Wrr6QbNSaSSVJ5Y3E4pbCYiTHUskHg13935Ubb7q8tx9GVbh2UuRnBc3WSyJHhUrw8KhprKnn9eDznYGieTzFcwQRya4GA"
+xpub="xpub6D3t231wUi5v9PEa8mgmyV7Tovg3CzrGEUGNQTfm9cK93je3PgX9udfhzUDx29pkeeHQBPpTSHpAxnDgsf2XRbvLrmbCUQybjtHx8SUb3JB"
 
 cashaccount keyhash     name1 "$p2pkh"
 cashaccount scripthash  name2 "$p2sh"           --format=opreturn
+cashaccount paymentcode name4 from-xpub "$xpub" --format=electron-markdown
+cashaccount paymentcode name3 from-code "$paymentcode"
 ```
 
 Generally:
