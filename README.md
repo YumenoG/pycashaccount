@@ -21,7 +21,7 @@ It is very basic still. Please file an issue if you have additional use cases fo
 - ~~OP_RETURN hex-like output~~
 - ~~p2sh output~~
 - support payment codes
-- generate raw hex output that common node CLIs can use
+- ~~generate raw hex output that common node CLIs can use~~
 
 
 ## CLI (command line interface) usage after installation
@@ -32,8 +32,8 @@ For example, get the information required for a key hash and script hash account
 p2pkh="bitcoincash:qrme8l598x49gmjhn92dgwhk5a3znu5wfcf5uf94e9"
 p2sh="bitcoincash:pp4d24pemra2k3mths8cjxpuu6yl3a5ctvcp8mdkm9"
 
-cashaccount keyhash name1 "$p2pkh"
-cashaccount scripthash name2 "$p2sh" --format=opreturn
+cashaccount keyhash     name1 "$p2pkh"
+cashaccount scripthash  name2 "$p2sh"           --format=opreturn
 ```
 
 Generally:
@@ -88,6 +88,6 @@ Code contributions are welcome:
 
 Support donations are also welcome:
 
-- `🌵emergent_reasons#100` (my first cash account - it points to `bitcoincash:qz3aq0uhltztqyjy2esa0lshadg9pf87yu7yealu3a`
-- `☯Jonathan#100` (the primary creator of the cash account specification - it points to `bitcoincash:qr4aadjrpu73d2wxwkxkcrt6gqxgu6a7usxfm96fst`)
-- [Electron Cash](https://electroncash.org/) If you are using electron cash special OP_RETURN features to post transactions, the team has donation information on the site.
+- `🌵emergent_reasons#100` (`bitcoincash:qz3aq0uhltztqyjy2esa0lshadg9pf87yu7yealu3a`)
+- `☯Jonathan#100` for donations to the cashaccount project (`bitcoincash:qr4aadjrpu73d2wxwkxkcrt6gqxgu6a7usxfm96fst`)
+- [Electron Cash (bottom of the page)](https://electroncash.org/) The team added a general OP_RETURN feature where you can use the opreturn formatting.
