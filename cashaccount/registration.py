@@ -3,9 +3,9 @@ import textwrap
 
 
 NAME_REGEX = r'^[a-zA-Z0-9_]{1,99}$'
-OP_PUSHDATA1 = '76'
-OP_PUSHDATA2 = '77'
-OP_PUSHDATA4 = '78'
+OP_PUSHDATA1 = '4c'
+OP_PUSHDATA2 = '4d'
+OP_PUSHDATA4 = '4e'
 
 
 class Registration:
